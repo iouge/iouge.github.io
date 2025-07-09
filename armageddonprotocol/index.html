@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- TODO: Replace with your book's title -->
+    <title>Book Title - Book Deal</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for the page */
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Add a transition for the background color change */
+            transition: background-color 0.8s ease;
+        }
+        /* Style for the store buttons for a consistent look */
+        .store-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-align: center;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            color: white;
+        }
+        .store-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .amazon-btn { background-color: #FF9900; }
+        .barnes-noble-btn { background-color: #2E6B44; }
+        .bookshop-btn { background-color: #000000; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+    <!-- Main Container -->
+    <div class="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
+
+        <!-- Main section for the single book -->
+        <main id="book-list" class="flex justify-center mt-10">
+
+            <!-- Container for the two cards -->
+            <!-- The `md:items-start` class is added here to prevent columns from stretching to the same height -->
+            <div class="w-full max-w-4xl flex flex-col md:flex-row md:items-start gap-8">
+                
+                <!-- Left Column: Book Cover -->
+                <div class="w-full md:w-1/3 flex justify-center">
+                    <!-- 
+                        TODO: Replace with your book cover image URL.
+                        IMPORTANT: The image needs to support cross-origin requests for the color analysis to work.
+                        The image itself now acts as the card.
+                        Size is constrained on mobile with `max-w-sm` and unconstrained on desktop with `md:max-w-full`.
+                    -->
+                    <img id="book-cover-image" crossorigin="anonymous" class="w-full max-w-sm md:max-w-full mx-auto h-auto rounded-xl shadow-lg" src="https://m.media-amazon.com/images/I/91xygOdEyDL._SL1500_.jpg" alt="Book cover for [Book Title Here]" onerror="this.onerror=null;this.src='https://placehold.co/800x1200/cccccc/000000?text=Image+Not+Found';">
+                </div>
+
+                <!-- Right Card: Book Information -->
+                <div class="w-full md:w-2/3 bg-white rounded-xl shadow-lg p-8 flex flex-col">
+                    <!-- TODO: Replace with book title and author name -->
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-2">The Armageddon Protocol: Book IV in The Galactic Cold War Book Series</h2>
+                    <h3 class="text-xl md:text-2xl font-medium text-slate-600 mb-6">Dan Moren</h3>
+                    
+                    <!-- TODO: Replace with book description -->
+                    <p class="text-slate-700 mb-8 leading-relaxed text-base">On the heels of the terrorist attacks on the planet Nova’s capital, the Special Projects Team finds itself targeted by the ambitious new head of the Commonwealth Intelligence Directorate, Aidan Kester.
+                      When Kovalic and General Adaj are arrested on charges of treason, Tapper, Brody, Sayers, and Taylor are forced to go on the run. 
+                      While Kovalic and the general attempt to uncover an Illyrican mole within the Commonwealth’s intelligence apparatus, it’s up to the rest of the team to clear their friends’ names, 
+                      even if that means making a deal with an old enemy to carry out a daring heist that might just get them all killed.</p>
+                    
+                    <!-- TODO: Replace '#' with your actual store links -->
+                    <div class="flex flex-col space-y-3 mt-auto">
+                        <a href="https://www.amazon.com/Armageddon-Protocol-Book-Galactic-Cold-ebook/dp/B0CFPPJM8W" target="_blank" rel="noopener noreferrer" class="store-button amazon-btn">
+                            Amazon
+                        </a>
+                        <a href="https://www.barnesandnoble.com/w/the-armageddon-protocol-dan-moren/1143928550" target="_blank" rel="noopener noreferrer" class="store-button barnes-noble-btn">
+                            Barnes & Noble
+                        </a>
+                        <a href="https://bookshop.org/p/books/the-armageddon-protocol-book-iv-in-the-galactic-cold-war-book-series-dan-moren/20474974" target="_blank" rel="noopener noreferrer" class="store-button bookshop-btn">
+                            Bookshop.org
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="text-center mt-12 py-4 border-t border-slate-200">
+            <p class="text-slate-500"></p>
+            <p class="text-sm text-slate-400 mt-1"></p>
+        </footer>
+
+    </div>
+
+    <script>
+        window.onload = function() {
+            const img = document.getElementById('book-cover-image');
+            const body = document.body;
+
+            // Make sure the image is loaded before we try to process it
+            if (img.complete && img.naturalHeight !== 0) {
+                getDominantColor(img);
+            } else {
+                img.addEventListener('load', function() {
+                    getDominantColor(img);
+                });
+                img.addEventListener('error', function() {
+                    console.error("The image could not be loaded.");
+                });
+            }
+
+            function getDominantColor(imgEl) {
+                // FIX: Check if the image has valid dimensions before processing.
+                // This prevents errors if the image fails to load properly.
+                if (imgEl.naturalWidth === 0 || imgEl.naturalHeight === 0) {
+                    console.error("Image has zero dimensions. Cannot extract color.");
+                    return;
+                }
+                try {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Set canvas dimensions to match the image's intrinsic dimensions
+                    canvas.width = imgEl.naturalWidth;
+                    canvas.height = imgEl.naturalHeight;
+
+                    // Draw the image to the canvas
+                    ctx.drawImage(imgEl, 0, 0, canvas.width, canvas.height);
+
+                    // Get the image data from the canvas
+                    const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+                    const colorCounts = {};
+                    let dominantColor = null;
+                    let maxCount = 0;
+
+                    // Loop through pixel data (sampling every 5 pixels for performance)
+                    for (let i = 0; i < data.length; i += 20) { // 4 bytes per pixel * 5
+                        const r = data[i];
+                        const g = data[i + 1];
+                        const b = data[i + 2];
+
+                        // Skip pixels that are too white or too black
+                        if (r > 240 && g > 240 && b > 240) continue;
+                        if (r < 15 && g < 15 && b < 15) continue;
+
+                        const color = `${r},${g},${b}`;
+                        colorCounts[color] = (colorCounts[color] || 0) + 1;
+
+                        if (colorCounts[color] > maxCount) {
+                            maxCount = colorCounts[color];
+                            dominantColor = color.split(',').map(Number);
+                        }
+                    }
+
+                    if (dominantColor) {
+                        // Create a light, desaturated version of the dominant color for the background
+                        const [r, g, b] = dominantColor;
+                        const pastelColor = `rgba(${r}, ${g}, ${b}, 0.15)`;
+                        body.style.backgroundColor = pastelColor;
+                    }
+                } catch (e) {
+                    console.error("Could not process image for color extraction.", e);
+                    if (e.name === 'SecurityError') {
+                        console.error("This is likely a CORS issue. The image cannot be analyzed because it's from a different origin without the correct 'Access-Control-Allow-Origin' headers.");
+                    }
+                }
+            }
+        };
+    </script>
+
+</body>
+</html>
